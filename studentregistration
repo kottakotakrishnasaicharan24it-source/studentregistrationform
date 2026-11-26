@@ -1,0 +1,209 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class StudentRegistration extends JFrame implements ActionListener {
+
+    JLabel title, nameLabel, rollLabel, ageLabel, genderLabel;
+    JLabel branchLabel, emailLabel, phoneLabel, addressLabel;
+
+    JTextField nameField, rollField, ageField;
+    JTextField emailField, phoneField;
+
+    JRadioButton male, female;
+    JComboBox<String> branchBox;
+    JTextArea addressArea;
+
+    JButton submitButton, resetButton;
+
+    StudentRegistration() {
+
+        setTitle("Student Registration Form");
+        setSize(500, 600);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(null);
+
+        title = new JLabel("STUDENT REGISTRATION FORM");
+        title.setFont(new Font("Arial", Font.BOLD, 20));
+        title.setBounds(65, 20, 380, 30);
+        add(title);
+
+        nameLabel = new JLabel("Student Name:");
+        nameLabel.setBounds(50, 80, 120, 25);
+        add(nameLabel);
+
+        nameField = new JTextField();
+        nameField.setBounds(180, 80, 220, 25);
+        add(nameField);
+
+        rollLabel = new JLabel("Roll Number:");
+        rollLabel.setBounds(50, 120, 120, 25);
+        add(rollLabel);
+
+        rollField = new JTextField();
+        rollField.setBounds(180, 120, 220, 25);
+        add(rollField);
+
+        ageLabel = new JLabel("Age:");
+        ageLabel.setBounds(50, 160, 120, 25);
+        add(ageLabel);
+
+        ageField = new JTextField();
+        ageField.setBounds(180, 160, 220, 25);
+        add(ageField);
+
+        genderLabel = new JLabel("Gender:");
+        genderLabel.setBounds(50, 200, 120, 25);
+        add(genderLabel);
+
+        male = new JRadioButton("Male");
+        female = new JRadioButton("Female");
+
+        male.setBounds(180, 200, 80, 25);
+        female.setBounds(270, 200, 100, 25);
+
+        ButtonGroup genderGroup = new ButtonGroup();
+        genderGroup.add(male);
+        genderGroup.add(female);
+
+        add(male);
+        add(female);
+
+        branchLabel = new JLabel("Branch:");
+        branchLabel.setBounds(50, 240, 120, 25);
+        add(branchLabel);
+
+        String[] branches = {
+            "Select Branch", "CSE", "IT", "ECE", "EEE", "MECH", "CIVIL"
+        };
+
+        branchBox = new JComboBox<>(branches);
+        branchBox.setBounds(180, 240, 220, 25);
+        add(branchBox);
+
+        emailLabel = new JLabel("Email:");
+        emailLabel.setBounds(50, 280, 120, 25);
+        add(emailLabel);
+
+        emailField = new JTextField();
+        emailField.setBounds(180, 280, 220, 25);
+        add(emailField);
+
+        phoneLabel = new JLabel("Phone Number:");
+        phoneLabel.setBounds(50, 320, 120, 25);
+        add(phoneLabel);
+
+        phoneField = new JTextField();
+        phoneField.setBounds(180, 320, 220, 25);
+        add(phoneField);
+
+        addressLabel = new JLabel("Address:");
+        addressLabel.setBounds(50, 360, 120, 25);
+        add(addressLabel);
+
+        addressArea = new JTextArea();
+        JScrollPane scroll = new JScrollPane(addressArea);
+        scroll.setBounds(180, 360, 220, 70);
+        add(scroll);
+
+        submitButton = new JButton("Submit");
+        submitButton.setBounds(120, 470, 100, 35);
+        add(submitButton);
+
+        resetButton = new JButton("Reset");
+        resetButton.setBounds(250, 470, 100, 35);
+        add(resetButton);
+
+        submitButton.addActionListener(this);
+        resetButton.addActionListener(this);
+
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
+
+    public void actionPerformed(ActionEvent e) {
+
+        if (e.getSource() == submitButton) {
+
+            String name = nameField.getText().trim();
+            String roll = rollField.getText().trim();
+            String age = ageField.getText().trim();
+            String email = emailField.getText().trim();
+            String phone = phoneField.getText().trim();
+            String address = addressArea.getText().trim();
+
+            if (name.isEmpty() || roll.isEmpty() ||
+                age.isEmpty() || email.isEmpty() ||
+                phone.isEmpty() || address.isEmpty()) {
+
+                JOptionPane.showMessageDialog(this,
+                    "Please fill all the details!");
+                return;
+            }
+
+            if (!age.matches("\\d+") ||
+                Integer.parseInt(age) < 1 ||
+                Integer.parseInt(age) > 120) {
+                JOptionPane.showMessageDialog(this,
+                    "Enter a valid age!");
+                return;
+            }
+
+            if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+                JOptionPane.showMessageDialog(this,
+                    "Enter a valid email!");
+                return;
+            }
+
+            if (!phone.matches("\\d{10}")) {
+                JOptionPane.showMessageDialog(this,
+                    "Enter a valid 10-digit phone number!");
+                return;
+            }
+
+            if (!male.isSelected() && !female.isSelected()) {
+                JOptionPane.showMessageDialog(this,
+                    "Please select gender!");
+                return;
+            }
+
+            if (branchBox.getSelectedIndex() == 0) {
+                JOptionPane.showMessageDialog(this,
+                    "Please select a branch!");
+                return;
+            }
+
+            String gender = male.isSelected() ? "Male" : "Female";
+
+            JOptionPane.showMessageDialog(this,
+                "STUDENT REGISTRATION SUCCESSFUL!\n\n" +
+                "Name: " + name +
+                "\nRoll Number: " + roll +
+                "\nAge: " + age +
+                "\nGender: " + gender +
+                "\nBranch: " + branchBox.getSelectedItem() +
+                "\nEmail: " + email +
+                "\nPhone: " + phone +
+                "\nAddress: " + address
+            );
+
+        }
+
+        if (e.getSource() == resetButton) {
+            nameField.setText("");
+            rollField.setText("");
+            ageField.setText("");
+            emailField.setText("");
+            phoneField.setText("");
+            addressArea.setText("");
+            male.setSelected(false);
+            female.setSelected(false);
+            branchBox.setSelectedIndex(0);
+        }
+    }
+
+    public static void main(String[] args) {
+        new StudentRegistration();
+    }
+}
+
